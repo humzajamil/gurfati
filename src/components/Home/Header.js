@@ -33,14 +33,10 @@ export default Header;
 
 const styles = StyleSheet.create({
   container: {
-    // flex: 1,
     flexDirection: 'row',
-    // alignItems: 'center',
-    // alignSelf: 'flex-start',
+    alignItems: 'center',
     marginTop: height * 0.02,
     marginLeft: height * 0.02,
-    // justifyContent: 'flex-start',
-    zIndex: 99,
   },
   drawerIcon: {
     marginRight: width * 0.15,
