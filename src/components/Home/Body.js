@@ -7,9 +7,11 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
 } from 'react-native';
+
+import {SliderBox} from 'react-native-image-slider-box';
+
 import {Icon} from 'react-native-elements';
-import {riyadh} from '../../assets/index';
-import {Image} from 'react-native-elements';
+import {images, riyadh} from '../../assets/index';
 import Header from './Header';
 import Footer from './Footer';
 import {height, width} from '../../constants/Dimensions';
@@ -25,7 +27,7 @@ const Body = () => {
         flex: 1,
       }}>
       <ImageBackground
-        source={riyadh}
+        source={images[0]}
         style={{width: width * 1, height: height * 0.77}}>
         <Header />
         <View
