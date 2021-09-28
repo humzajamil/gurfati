@@ -20,18 +20,60 @@ const Footer = () => {
   const [show, setShow] = useState(true);
   const [pressed, setPressed] = useState(false);
   const [id, setID] = useState('');
+  const [calender, setCalender] = useState(
+    moment().add(0, 'month').startOf('month').format('MMM'),
+  );
+
+  let weekDays = ['SU', 'MO', 'TU', 'WE', 'TH', 'FR', 'SA'];
+  let monthDays = {};
 
   useEffect(() => {
     let monthsArray = [];
-    console.log(moment().add(0, 'month').startOf('month').format('MMM'));
+    // console.log(moment().add(0, 'month').startOf('month').format('MMM'));
     for (let i = 0; i <= 11; i++) {
       monthsArray.push(moment().add(i, 'month').startOf('month').format('MMM'));
-      handleMonthPressed(
-        moment().add(i, 'month').startOf('month').format('MMM'),
-      );
+      // console.log(moment().add(i, 'M').startOf('month').format('YYYY-MM-DD'));
+      // console.log(moment().add(i, 'M').endOf('month').format('YYYY-MM-DD'));
+      console.log(monthsArray[i]);
+      if (i == 0) {
+        console.log('in');
+        let curr = moment();
+        let end = moment().endOf('month');
+        let days = end.diff(curr, 'days');
+        monthDays[monthsArray[i]] = {dates: [], days: []};
+
+        for (let j = 0; j <= days; j++) {
+          monthDays[monthsArray[i]].dates.push(moment().add(j, 'days').date());
+          monthDays[monthsArray[i]].days.push(
+            weekDays[moment().add(j, 'days').day()],
+          );
+        }
+        console.log(monthDays[monthsArray[i]]);
+      } else {
+        let curr = moment(
+          moment().add(i, 'M').startOf('month').format('YYYY-MM-DD'),
+        );
+        let end = moment(
+          moment().add(i, 'M').endOf('month').format('YYYY-MM-DD'),
+        );
+        let days = end.diff(curr, 'days');
+        monthDays[monthsArray[i]] = {dates: [], days: []};
+
+        for (let k = 0; k <= days; k++) {
+          monthDays[monthsArray[i]].dates.push(
+            moment(curr).add(k, 'days').date(),
+          );
+          monthDays[monthsArray[i]].days.push(
+            weekDays[moment(curr).add(k, 'days').day()],
+          );
+        }
+      }
+      setDates(monthDays);
+      console.log(monthDays[monthsArray[i]]);
     }
     setMonths(monthsArray);
     setShow(false);
+    // console.log(monthDays);
   }, []);
 
   const handleLeftChevron = () => {
@@ -47,27 +89,16 @@ const Footer = () => {
       setHotelType(next);
     }
   };
-  let weekDays = ['SU', 'MO', 'TU', 'WE', 'TH', 'FR', 'SA'];
-  let monthDays = {};
 
   const handleMonthPressed = month => {
-    if (month == moment().add(0, 'month').startOf('month').format('MMM')) {
-      let curr = moment();
-      let end = moment().endOf('month');
-      let days = end.diff(curr, 'days');
-      monthDays[month] = {dates: [], days: []};
-
-      for (let i = 0; i <= days; i++) {
-        monthDays[month].dates.push(moment().add(i, 'days').date());
-        monthDays[month].days.push(weekDays[moment().add(i, 'days').day()]);
-      }
-      setDates(monthDays);
-      console.log(monthDays);
-    }
+    setPressed(true);
+    setID(month);
+    console.log('inside press', month);
+    setCalender(month);
   };
   return (
     <View style={{flex: 1, justifyContent: 'flex-end'}}>
-      {show ? (
+      {show && dates ? (
         <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
           <ActivityIndicator color={COLORS.primary} size="large" />
         </View>
@@ -83,7 +114,7 @@ const Footer = () => {
               alignSelf: 'flex-end',
               marginLeft: width * 0.02,
             }}>
-            {dates['Sep'].dates.map((date, index) => (
+            {dates[calender].dates.map((date, index) => (
               <View
                 key={date}
                 style={{
@@ -99,12 +130,8 @@ const Footer = () => {
                     padding: width * 0.02,
                     borderRadius: 5,
                     fontSize: 12,
-                    color:
-                      pressed && month == id ? COLORS.secondary : '#404040',
-                    backgroundColor:
-                      pressed && month == id
-                        ? COLORS.primary
-                        : COLORS.secondary,
+                    color: '#404040',
+                    backgroundColor: COLORS.secondary,
                   }}>
                   {date}
                 </Text>
@@ -118,14 +145,10 @@ const Footer = () => {
                     padding: width * 0.02,
                     borderRadius: 5,
                     fontSize: 12,
-                    color:
-                      pressed && month == id ? COLORS.secondary : '#404040',
-                    backgroundColor:
-                      pressed && month == id
-                        ? COLORS.primary
-                        : COLORS.secondary,
+                    color: '#404040',
+                    backgroundColor: COLORS.secondary,
                   }}>
-                  {dates['Sep'].days[index]}
+                  {dates[calender].days[index]}
                 </Text>
               </View>
             ))}
@@ -146,25 +169,25 @@ const Footer = () => {
                 style={{
                   paddingRight: width * 0.065,
                 }}>
-                <Text
+                <TouchableWithoutFeedback
                   onPress={() => {
-                    setPressed(true);
-                    setID(month);
                     handleMonthPressed(month);
-                  }}
-                  style={{
-                    padding: width * 0.02,
-                    borderRadius: 5,
-                    fontSize: 12,
-                    color:
-                      pressed && month == id ? COLORS.secondary : '#404040',
-                    backgroundColor:
-                      pressed && month == id
-                        ? COLORS.primary
-                        : COLORS.secondary,
                   }}>
-                  {month}
-                </Text>
+                  <Text
+                    style={{
+                      padding: width * 0.02,
+                      borderRadius: 5,
+                      fontSize: 12,
+                      color:
+                        pressed && month == id ? COLORS.secondary : '#404040',
+                      backgroundColor:
+                        pressed && month == id
+                          ? COLORS.primary
+                          : COLORS.secondary,
+                    }}>
+                    {month}
+                  </Text>
+                </TouchableWithoutFeedback>
               </View>
             ))}
           </ScrollView>
