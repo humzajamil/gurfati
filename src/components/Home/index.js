@@ -5,7 +5,7 @@ import Body from './Body';
 
 const Home = ({navigation}) => (
   <View style={{flex: 1, backgroundColor: COLORS.secondary}}>
-    <Body />
+    <Body navigation={navigation} />
   </View>
 );
 

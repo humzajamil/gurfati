@@ -18,8 +18,10 @@ const Footer = () => {
   const [months, setMonths] = useState([]);
   const [dates, setDates] = useState({});
   const [show, setShow] = useState(true);
-  const [pressed, setPressed] = useState(false);
-  const [id, setID] = useState('');
+  const [monthPressed, setMonthPressed] = useState(false);
+  const [datePressed, setDatePressed] = useState(false);
+  const [monthID, setMonthID] = useState('');
+  const [dateID, setDateID] = useState('');
   const [calender, setCalender] = useState(
     moment().add(0, 'month').startOf('month').format('MMM'),
   );
@@ -91,11 +93,18 @@ const Footer = () => {
   };
 
   const handleMonthPressed = month => {
-    setPressed(true);
-    setID(month);
+    setMonthPressed(true);
+    setMonthID(month);
     console.log('inside press', month);
     setCalender(month);
   };
+
+  const handleDatePressed = date => {
+    setDatePressed(true);
+    setDateID(date);
+    console.log('inside press', date);
+  };
+
   return (
     <View style={{flex: 1, justifyContent: 'flex-end'}}>
       {show && dates ? (
@@ -115,44 +124,61 @@ const Footer = () => {
               marginLeft: width * 0.02,
             }}>
             {dates[calender].dates.map((date, index) => (
-              <View
+              <TouchableWithoutFeedback
+                onPress={() => handleDatePressed(date)}
                 key={date}
-                style={{
-                  paddingRight: width * 0.065,
-                }}>
-                <Text
-                  onPress={() => {
-                    setPressed(true);
-                    setID('');
-                    handleMonthPressed('');
-                  }}
+                style={{backgroundColor: 'red'}}>
+                <View
                   style={{
-                    padding: width * 0.02,
+                    alignSelf: 'center',
+                    backgroundColor:
+                      (datePressed && date == dateID) ||
+                      (date == moment().add(0, 'days').date() && !datePressed)
+                        ? COLORS.primary
+                        : COLORS.secondary,
+                    alignItems: 'center',
+                    height: height * 0.045,
+                    justifyContent: 'space-around',
                     borderRadius: 5,
-                    fontSize: 12,
-                    color: '#404040',
-                    backgroundColor: COLORS.secondary,
+                    marginRight: width * 0.028,
                   }}>
-                  {date}
-                </Text>
-                <Text
-                  onPress={() => {
-                    setPressed(true);
-                    setID('');
-                    handleMonthPressed('');
-                  }}
-                  style={{
-                    padding: width * 0.02,
-                    borderRadius: 5,
-                    fontSize: 12,
-                    color: '#404040',
-                    backgroundColor: COLORS.secondary,
-                  }}>
-                  {dates[calender].days[index]}
-                </Text>
-              </View>
+                  <Text
+                    style={{
+                      padding: width * 0.02,
+                      borderRadius: 5,
+                      fontSize: 10,
+                      color:
+                        (datePressed && date == dateID) ||
+                        (date == moment().add(0, 'days').date() && !datePressed)
+                          ? COLORS.secondary
+                          : '#404040',
+                    }}>
+                    {date}
+                  </Text>
+                  <Text
+                    style={{
+                      padding: width * 0.02,
+                      borderRadius: 5,
+                      fontSize: 10,
+                      color:
+                        (datePressed && date == dateID) ||
+                        (date == moment().add(0, 'days').date() && !datePressed)
+                          ? COLORS.secondary
+                          : 'lightgrey',
+                    }}>
+                    {dates[calender].days[index]}
+                  </Text>
+                </View>
+              </TouchableWithoutFeedback>
             ))}
           </ScrollView>
+
+          <View
+            style={{
+              height: 1,
+              backgroundColor: 'lightgrey',
+              width: width * 1,
+            }}></View>
           <ScrollView
             horizontal={true}
             showsHorizontalScrollIndicator={false}
@@ -167,7 +193,7 @@ const Footer = () => {
               <View
                 key={month}
                 style={{
-                  paddingRight: width * 0.065,
+                  paddingRight: width * 0.023,
                 }}>
                 <TouchableWithoutFeedback
                   onPress={() => {
@@ -179,9 +205,23 @@ const Footer = () => {
                       borderRadius: 5,
                       fontSize: 12,
                       color:
-                        pressed && month == id ? COLORS.secondary : '#404040',
+                        (monthPressed && month == monthID) ||
+                        (month ==
+                          moment()
+                            .add(0, 'month')
+                            .startOf('month')
+                            .format('MMM') &&
+                          !monthPressed)
+                          ? COLORS.secondary
+                          : '#404040',
                       backgroundColor:
-                        pressed && month == id
+                        (monthPressed && month == monthID) ||
+                        (month ==
+                          moment()
+                            .add(0, 'month')
+                            .startOf('month')
+                            .format('MMM') &&
+                          !monthPressed)
                           ? COLORS.primary
                           : COLORS.secondary,
                     }}>
@@ -211,7 +251,7 @@ const Footer = () => {
                 }}
               />
             </TouchableWithoutFeedback>
-            <Text style={{color: COLORS.secondary}}>
+            <Text style={{color: COLORS.secondary, fontSize: 12}}>
               {hotel_types[hotelType]}
             </Text>
             <TouchableWithoutFeedback onPress={handleRightChevron}>

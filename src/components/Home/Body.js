@@ -19,11 +19,16 @@ import Footer from './Footer';
 import {height, width} from '../../constants/Dimensions';
 import COLORS from '../../constants/COLORS';
 
-const Body = () => {
+const Body = ({navigation}) => {
   const [showCheckInCaret, setShowCheckInCaret] = useState(true);
   const [showCheckOutCaret, setShowCheckOutCaret] = useState(false);
 
   const [index, setIndex] = useState(0);
+
+  const config = {
+    velocityThreshold: 0.01,
+    directionalOffsetThreshold: 90,
+  };
 
   const onSwipe = gestureName => {
     const {SWIPE_LEFT, SWIPE_RIGHT} = swipeDirections;
@@ -50,11 +55,12 @@ const Body = () => {
         flex: 1,
       }}>
       <GestureRecognizer
+        config={config}
         onSwipe={(direction, state) => onSwipe(direction, state)}>
         <ImageBackground
           source={images[index]}
           style={{width: width * 1, height: height * 0.77}}>
-          <Header />
+          <Header navigation={navigation} />
 
           <View
             style={{

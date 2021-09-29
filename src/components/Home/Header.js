@@ -13,6 +13,7 @@ const Header = ({navigation}) => {
           type="evilicon"
           color={COLORS.secondary}
           size={30}
+          onPress={() => navigation.openDrawer()}
         />
       </TouchableOpacity>
       <TouchableOpacity style={styles.searchContainer}>

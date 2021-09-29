@@ -1,3 +1,4 @@
+import 'react-native-gesture-handler';
 //built in components
 import React, {useEffect} from 'react';
 import {StatusBar} from 'react-native';
