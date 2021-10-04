@@ -4,6 +4,7 @@ import {
   StyleSheet,
   Text,
   TouchableWithoutFeedback,
+  TouchableOpacity,
   View,
   ActivityIndicator,
 } from 'react-native';
@@ -12,6 +13,8 @@ import COLORS from '../../constants/COLORS';
 import {height, width} from '../../constants/Dimensions';
 import {hotel_types} from '../../DATA/hotel_types';
 import moment from 'moment';
+import CheckOutTime from './CheckOutTime';
+import CheckInTime from './CheckInTime';
 
 const Footer = () => {
   const [hotelType, setHotelType] = useState(0);
@@ -25,6 +28,10 @@ const Footer = () => {
   const [calender, setCalender] = useState(
     moment().add(0, 'month').startOf('month').format('MMM'),
   );
+  const [date, setDate] = useState();
+  const [day, setDay] = useState();
+  const [month, setMonth] = useState();
+  const [year, setYear] = useState();
 
   let weekDays = ['SU', 'MO', 'TU', 'WE', 'TH', 'FR', 'SA'];
   let monthDays = {};
@@ -71,7 +78,10 @@ const Footer = () => {
         }
       }
       setDates(monthDays);
-      console.log(monthDays[monthsArray[i]]);
+      console.log(
+        monthDays[monthsArray[i]].dates[0],
+        monthDays[monthsArray[i]].days[0],
+      );
     }
     setMonths(monthsArray);
     setShow(false);
@@ -113,6 +123,59 @@ const Footer = () => {
         </View>
       ) : (
         <>
+          <View
+            style={{
+              flex: 1,
+              height: height * 0.1,
+              justifyContent: 'flex-end',
+            }}>
+            <View
+              style={{
+                backgroundColor: 'rgba(52, 52, 52, 0.8)',
+                height: height * 0.1,
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+              }}>
+              <View
+                style={{justifyContent: 'center', marginLeft: width * 0.05}}>
+                <TouchableOpacity
+                  onPress={() => {
+                    setShowCheckInCaret(true);
+                    setShowCheckOutCaret(false);
+                  }}
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'flex-start',
+                    marginTop: width * 0.02,
+                  }}>
+                  <CheckInTime
+                    date={dates[months[0]].dates[0]}
+                    day={dates[months[0]].days[0]}
+                    month={months[0]}
+                  />
+                </TouchableOpacity>
+              </View>
+              <View style={{justifyContent: 'center'}}>
+                <Icon
+                  name="calendar"
+                  type="evilicon"
+                  color={COLORS.primary}
+                  size={35}
+                />
+              </View>
+              <TouchableOpacity
+                onPress={() => {
+                  setShowCheckInCaret(false);
+                  setShowCheckOutCaret(true);
+                }}
+                style={{
+                  justifyContent: 'center',
+                  marginRight: width * 0.05,
+                }}>
+                <CheckOutTime />
+              </TouchableOpacity>
+            </View>
+          </View>
           <ScrollView
             horizontal={true}
             showsHorizontalScrollIndicator={false}
