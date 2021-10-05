@@ -15,8 +15,11 @@ import {hotel_types} from '../../DATA/hotel_types';
 import moment from 'moment';
 import CheckOutTime from './CheckOutTime';
 import CheckInTime from './CheckInTime';
+import {NavigationContainer} from '@react-navigation/native';
 
-const Footer = () => {
+const Footer = ({navigation}) => {
+  const [showCheckInCaret, setShowCheckInCaret] = useState(true);
+  const [showCheckOutCaret, setShowCheckOutCaret] = useState(false);
   const [hotelType, setHotelType] = useState(0);
   const [months, setMonths] = useState([]);
   const [dates, setDates] = useState({});
@@ -28,10 +31,8 @@ const Footer = () => {
   const [calender, setCalender] = useState(
     moment().add(0, 'month').startOf('month').format('MMM'),
   );
-  const [date, setDate] = useState();
-  const [day, setDay] = useState();
-  const [month, setMonth] = useState();
-  const [year, setYear] = useState();
+  const [checkInDate, setCheckInDate] = useState(moment());
+  const [checkOutDate, setCheckOutDate] = useState(moment().add(1, 'days'));
 
   let weekDays = ['SU', 'MO', 'TU', 'WE', 'TH', 'FR', 'SA'];
   let monthDays = {};
@@ -41,8 +42,6 @@ const Footer = () => {
     // console.log(moment().add(0, 'month').startOf('month').format('MMM'));
     for (let i = 0; i <= 11; i++) {
       monthsArray.push(moment().add(i, 'month').startOf('month').format('MMM'));
-      // console.log(moment().add(i, 'M').startOf('month').format('YYYY-MM-DD'));
-      // console.log(moment().add(i, 'M').endOf('month').format('YYYY-MM-DD'));
       console.log(monthsArray[i]);
       if (i == 0) {
         console.log('in');
@@ -52,7 +51,7 @@ const Footer = () => {
         monthDays[monthsArray[i]] = {dates: [], days: []};
 
         for (let j = 0; j <= days; j++) {
-          monthDays[monthsArray[i]].dates.push(moment().add(j, 'days').date());
+          monthDays[monthsArray[i]].dates.push(moment().add(j, 'days'));
           monthDays[monthsArray[i]].days.push(
             weekDays[moment().add(j, 'days').day()],
           );
@@ -69,9 +68,7 @@ const Footer = () => {
         monthDays[monthsArray[i]] = {dates: [], days: []};
 
         for (let k = 0; k <= days; k++) {
-          monthDays[monthsArray[i]].dates.push(
-            moment(curr).add(k, 'days').date(),
-          );
+          monthDays[monthsArray[i]].dates.push(moment(curr).add(k, 'days'));
           monthDays[monthsArray[i]].days.push(
             weekDays[moment(curr).add(k, 'days').day()],
           );
@@ -111,7 +108,13 @@ const Footer = () => {
 
   const handleDatePressed = date => {
     setDatePressed(true);
-    setDateID(date);
+    setDateID(date.date());
+    if (showCheckInCaret) {
+      setCheckInDate(date);
+      setCheckOutDate(moment(date).add(1, 'days'));
+    } else {
+      setCheckOutDate(date);
+    }
     console.log('inside press', date);
   };
 
@@ -149,9 +152,8 @@ const Footer = () => {
                     marginTop: width * 0.02,
                   }}>
                   <CheckInTime
-                    date={dates[months[0]].dates[0]}
-                    day={dates[months[0]].days[0]}
-                    month={months[0]}
+                    date={checkInDate}
+                    showCaret={showCheckInCaret}
                   />
                 </TouchableOpacity>
               </View>
@@ -172,7 +174,10 @@ const Footer = () => {
                   justifyContent: 'center',
                   marginRight: width * 0.05,
                 }}>
-                <CheckOutTime />
+                <CheckOutTime
+                  date={checkOutDate}
+                  showCaret={showCheckOutCaret}
+                />
               </TouchableOpacity>
             </View>
           </View>
@@ -189,14 +194,15 @@ const Footer = () => {
             {dates[calender].dates.map((date, index) => (
               <TouchableWithoutFeedback
                 onPress={() => handleDatePressed(date)}
-                key={date}
+                key={moment(date).date()}
                 style={{backgroundColor: 'red'}}>
                 <View
                   style={{
                     alignSelf: 'center',
                     backgroundColor:
-                      (datePressed && date == dateID) ||
-                      (date == moment().add(0, 'days').date() && !datePressed)
+                      (datePressed && moment(date).date() == dateID) ||
+                      (moment(date).date() == moment().add(0, 'days').date() &&
+                        !datePressed)
                         ? COLORS.primary
                         : COLORS.secondary,
                     alignItems: 'center',
@@ -211,12 +217,14 @@ const Footer = () => {
                       borderRadius: 5,
                       fontSize: 10,
                       color:
-                        (datePressed && date == dateID) ||
-                        (date == moment().add(0, 'days').date() && !datePressed)
+                        (datePressed && moment(date).date() == dateID) ||
+                        (moment(date).date() ==
+                          moment().add(0, 'days').date() &&
+                          !datePressed)
                           ? COLORS.secondary
                           : '#404040',
                     }}>
-                    {date}
+                    {moment(date).date()}
                   </Text>
                   <Text
                     style={{
@@ -224,8 +232,10 @@ const Footer = () => {
                       borderRadius: 5,
                       fontSize: 10,
                       color:
-                        (datePressed && date == dateID) ||
-                        (date == moment().add(0, 'days').date() && !datePressed)
+                        (datePressed && moment(date).date() == dateID) ||
+                        (moment(date).date() ==
+                          moment().add(0, 'days').date() &&
+                          !datePressed)
                           ? COLORS.secondary
                           : 'lightgrey',
                     }}>

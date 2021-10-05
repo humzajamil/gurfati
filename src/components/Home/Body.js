@@ -65,7 +65,7 @@ const Body = ({navigation}) => {
           <Header navigation={navigation} />
         </ImageBackground>
       </GestureRecognizer>
-      <Footer />
+      <Footer navigation={navigation} />
     </View>
   );
 };

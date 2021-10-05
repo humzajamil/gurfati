@@ -5,7 +5,21 @@ import {height, width} from '../../constants/Dimensions';
 import {Icon} from 'react-native-elements';
 
 const CheckOutTime = props => {
-  const [showCheckOutCaret, setShowCheckOutCaret] = useState(false);
+  let weekDays = ['SU', 'MO', 'TU', 'WE', 'TH', 'FR', 'SA'];
+  let monthNames = [
+    'JAN',
+    'FEB',
+    'MAR',
+    'APR',
+    'MAY',
+    'JUN',
+    'JUL',
+    'AUG',
+    'SEP',
+    'OCT',
+    'NOV',
+    'DEC',
+  ];
 
   return (
     <View>
@@ -25,14 +39,20 @@ const CheckOutTime = props => {
           marginTop: width * 0.02,
         }}>
         <View style={{marginRight: width * 0.03}}>
-          <Text style={{color: COLORS.secondary, fontSize: 16}}>SUN</Text>
-          <Text style={{color: COLORS.secondary, fontSize: 10}}>JUL 22</Text>
+          <Text style={{color: COLORS.secondary, fontSize: 16}}>
+            {weekDays[props.date.day()]}
+          </Text>
+          <Text style={{color: COLORS.secondary, fontSize: 10}}>{`${
+            monthNames[props.date.month()]
+          } ${props.date.year().toString().slice(2)}`}</Text>
         </View>
         <View>
-          <Text style={{color: COLORS.secondary, fontSize: 30}}>03</Text>
+          <Text style={{color: COLORS.secondary, fontSize: 30}}>
+            {props.date.date()}
+          </Text>
         </View>
       </View>
-      {showCheckOutCaret ? (
+      {props.showCaret ? (
         <Icon
           name="caret-up-outline"
           type="ionicon"

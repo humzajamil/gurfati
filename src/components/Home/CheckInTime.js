@@ -5,7 +5,22 @@ import {height, width} from '../../constants/Dimensions';
 import {Icon} from 'react-native-elements';
 
 const CheckInTime = props => {
-  const [showCheckInCaret, setShowCheckInCaret] = useState(true);
+  let weekDays = ['SU', 'MO', 'TU', 'WE', 'TH', 'FR', 'SA'];
+  let monthNames = [
+    'JAN',
+    'FEB',
+    'MAR',
+    'APR',
+    'MAY',
+    'JUN',
+    'JUL',
+    'AUG',
+    'SEP',
+    'OCT',
+    'NOV',
+    'DEC',
+  ];
+  console.log(props.showCaret);
 
   return (
     <View>
@@ -26,19 +41,22 @@ const CheckInTime = props => {
         }}>
         <View style={{marginRight: width * 0.03}}>
           <Text style={{color: COLORS.secondary, fontSize: 16}}>
-            {props.day}
+            {weekDays[props.date.day()]}
           </Text>
           <Text style={{color: COLORS.secondary, fontSize: 10}}>
-            {props.month} 22
+            {`${monthNames[props.date.month()]} ${props.date
+              .year()
+              .toString()
+              .slice(2)}`}
           </Text>
         </View>
         <View>
           <Text style={{color: COLORS.secondary, fontSize: 30}}>
-            {props.date}
+            {props.date.date()}
           </Text>
         </View>
       </View>
-      {showCheckInCaret ? (
+      {props.showCaret ? (
         <Icon
           name="caret-up-outline"
           type="ionicon"
