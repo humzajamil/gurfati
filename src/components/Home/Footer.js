@@ -13,7 +13,7 @@ import {height, width} from '../../constants/Dimensions';
 import {hotel_types} from '../../DATA/hotel_types';
 import moment from 'moment';
 
-const Footer = () => {
+const Footer = ({navigation}) => {
   const [hotelType, setHotelType] = useState(0);
   const [months, setMonths] = useState([]);
   const [dates, setDates] = useState({});
@@ -272,8 +272,12 @@ const Footer = () => {
             titleStyle={{
               color: COLORS.secondary,
               fontSize: 20,
+              
               fontWeight: 'bold',
             }}
+            onPress={
+              ()=>{navigation.navigate("Search_screen")}
+            }
             buttonStyle={{
               backgroundColor: COLORS.primary,
               height: height * 0.074,

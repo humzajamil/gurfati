@@ -5,6 +5,8 @@ import {createDrawerNavigator} from '@react-navigation/drawer';
 import Home from '../components/Home';
 import {View} from 'react-native';
 import DrawerContent from './DrawerContent';
+import Search_screen from '../components/Search/Search_screen';
+
 
 function Feed() {
   return (
@@ -41,6 +43,7 @@ const Screens = () => (
   <NavigationContainer>
     <Stack.Navigator screenOptions={{headerShown: false}}>
       <Stack.Screen name="Home" component={MyDrawer} />
+      <Stack.Screen name="Search_screen" component={Search_screen} />
     </Stack.Navigator>
   </NavigationContainer>
 );
