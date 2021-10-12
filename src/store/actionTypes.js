@@ -1,0 +1,1 @@
+export const PROPERTY_TYPES = 'PROPERTY_TYPES';

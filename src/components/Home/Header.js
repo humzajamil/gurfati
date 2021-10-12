@@ -1,10 +1,12 @@
-import React from 'react';
+import React, {useEffect} from 'react';
+import {useIsFocused} from '@react-navigation/native';
 import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 import {Icon} from 'react-native-elements';
 import COLORS from '../../constants/COLORS';
 import {width, height} from '../../constants/Dimensions';
 
-const Header = ({navigation}) => {
+const Header = ({navigation, route}) => {
+  const isFocused = useIsFocused();
   return (
     <View style={styles.container}>
       <TouchableOpacity style={styles.drawerIcon}>
@@ -16,7 +18,9 @@ const Header = ({navigation}) => {
           onPress={() => navigation.openDrawer()}
         />
       </TouchableOpacity>
-      <TouchableOpacity style={styles.searchContainer}>
+      <TouchableOpacity
+        onPress={() => navigation.navigate('Search_city')}
+        style={styles.searchContainer}>
         <Icon
           name="search"
           type="evilicon"
@@ -24,7 +28,11 @@ const Header = ({navigation}) => {
           size={25}
           style={{paddingRight: width * 0.015, paddingLeft: width * 0.015}}
         />
-        <Text style={styles.searchText}>City, area, hotel name</Text>
+        <Text style={styles.searchText}>
+          {route.params != undefined
+            ? route.params.title
+            : 'City, area, hotel name'}
+        </Text>
       </TouchableOpacity>
     </View>
   );
@@ -50,7 +58,9 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   searchText: {
+    width: width * 0.5,
     paddingRight: 10,
     color: COLORS.secondary,
+    fontSize: 16,
   },
 });

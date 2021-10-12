@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   StyleSheet,
   Text,
@@ -11,7 +11,7 @@ import {
 
 import {SliderBox} from 'react-native-image-slider-box';
 import GestureRecognizer, {swipeDirections} from 'react-native-swipe-gestures';
-
+import {useIsFocused} from '@react-navigation/native';
 import {Icon} from 'react-native-elements';
 import {images, riyadh} from '../../assets/index';
 import Header from './Header';
@@ -21,11 +21,15 @@ import COLORS from '../../constants/COLORS';
 import CheckOutTime from './CheckOutTime';
 import CheckInTime from './CheckInTime';
 
-const Body = ({navigation}) => {
+const Body = ({navigation, route}) => {
   const [showCheckInCaret, setShowCheckInCaret] = useState(true);
   const [showCheckOutCaret, setShowCheckOutCaret] = useState(false);
-
   const [index, setIndex] = useState(0);
+  const isFocused = useIsFocused();
+
+  useEffect(() => {
+    setIndex(route.params != undefined ? route.params.index : 0);
+  }, [route, isFocused]);
 
   const config = {
     velocityThreshold: 0.01,
@@ -37,14 +41,14 @@ const Body = ({navigation}) => {
     switch (gestureName) {
       case SWIPE_LEFT:
         if (index != images.length - 1) {
-          console.log('in');
+         
           let i = index + 1;
           setIndex(i);
         }
         break;
       case SWIPE_RIGHT:
         if (index != 0) {
-          console.log('in');
+          //.log('in');
           let i = index - 1;
           setIndex(i);
         }
@@ -62,7 +66,7 @@ const Body = ({navigation}) => {
         <ImageBackground
           source={images[index]}
           style={{width: width * 1, height: height * 0.77}}>
-          <Header navigation={navigation} />
+          <Header navigation={navigation} route={route} />
         </ImageBackground>
       </GestureRecognizer>
       <Footer navigation={navigation} />

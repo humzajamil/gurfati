@@ -15,9 +15,18 @@ import {hotel_types} from '../../DATA/hotel_types';
 import moment from 'moment';
 import CheckOutTime from './CheckOutTime';
 import CheckInTime from './CheckInTime';
-
+import {useDispatch, useSelector} from 'react-redux';
+import {propertyTypes} from '../../store/actions/propertyTypes';
 
 const Footer = ({navigation}) => {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(propertyTypes());
+  }, [dispatch]);
+
+  const propertyFromState = useSelector(state => state.propertyTypes);
+
   const [showCheckInCaret, setShowCheckInCaret] = useState(true);
   const [showCheckOutCaret, setShowCheckOutCaret] = useState(false);
   const [hotelType, setHotelType] = useState(0);
@@ -39,12 +48,12 @@ const Footer = ({navigation}) => {
 
   useEffect(() => {
     let monthsArray = [];
-    
+
     for (let i = 0; i <= 11; i++) {
       monthsArray.push(moment().add(i, 'month').startOf('month').format('MMM'));
-      console.log(monthsArray[i]);
+      //console.log(monthsArray[i]);
       if (i == 0) {
-        console.log('in');
+        //console.log('in');
         let curr = moment();
         let end = moment().endOf('month');
         let days = end.diff(curr, 'days');
@@ -56,7 +65,7 @@ const Footer = ({navigation}) => {
             weekDays[moment().add(j, 'days').day()],
           );
         }
-        console.log(monthDays[monthsArray[i]]);
+        //console.log(monthDays[monthsArray[i]]);
       } else {
         let curr = moment(
           moment().add(i, 'M').startOf('month').format('YYYY-MM-DD'),
@@ -75,14 +84,13 @@ const Footer = ({navigation}) => {
         }
       }
       setDates(monthDays);
-      console.log(
-        monthDays[monthsArray[i]].dates[0],
-        monthDays[monthsArray[i]].days[0],
-      );
+      // console.log(
+      //   monthDays[monthsArray[i]].dates[0],
+      //   monthDays[monthsArray[i]].days[0],
+      // );
     }
     setMonths(monthsArray);
     setShow(false);
-    
   }, []);
 
   const handleLeftChevron = () => {
@@ -93,7 +101,7 @@ const Footer = ({navigation}) => {
   };
 
   const handleRightChevron = () => {
-    if (hotelType != hotel_types.length - 1) {
+    if (hotelType != propertyFromState.length - 1) {
       let next = hotelType + 1;
       setHotelType(next);
     }
@@ -102,7 +110,7 @@ const Footer = ({navigation}) => {
   const handleMonthPressed = month => {
     setMonthPressed(true);
     setMonthID(month);
-    console.log('inside press', month);
+    //console.log('inside press', month);
     setCalender(month);
   };
 
@@ -115,7 +123,7 @@ const Footer = ({navigation}) => {
     } else {
       setCheckOutDate(date);
     }
-    console.log('inside press', date);
+    // console.log('inside press', date);
   };
 
   return (
@@ -187,7 +195,7 @@ const Footer = ({navigation}) => {
             contentContainerStyle={{
               justifyContent: 'space-between',
               alignItems: 'center',
-              height: height * 0.07,
+              height: height * 0.09,
               alignSelf: 'flex-end',
               marginLeft: width * 0.02,
             }}>
@@ -325,7 +333,11 @@ const Footer = ({navigation}) => {
               />
             </TouchableWithoutFeedback>
             <Text style={{color: COLORS.secondary, fontSize: 12}}>
-              {hotel_types[hotelType]}
+              {propertyFromState.length ? (
+                propertyFromState[hotelType].name
+              ) : (
+                <ActivityIndicator size="small" color="white" />
+              )}
             </Text>
             <TouchableWithoutFeedback onPress={handleRightChevron}>
               <Icon
@@ -345,15 +357,15 @@ const Footer = ({navigation}) => {
             titleStyle={{
               color: COLORS.secondary,
               fontSize: 20,
-              
+
               fontWeight: 'bold',
             }}
-            onPress={
-              ()=>{navigation.navigate("Search_screen")}
-            }
+            onPress={() => {
+              navigation.navigate('Search_screen');
+            }}
             buttonStyle={{
               backgroundColor: COLORS.primary,
-              height: height * 0.074,
+              height: height * 0.07,
             }}
           />
         </>
